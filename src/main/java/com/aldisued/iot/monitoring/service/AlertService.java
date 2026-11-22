@@ -5,6 +5,7 @@ import com.aldisued.iot.monitoring.entity.Alert;
 import com.aldisued.iot.monitoring.repository.AlertRepository;
 import com.aldisued.iot.monitoring.repository.SensorRepository;
 import java.util.UUID;
+import com.aldisued.iot.monitoring.service.exception.EntityNotFoundException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,12 @@ public class AlertService {
   }
 
   public AlertDto findLastAlertBySensorId(UUID sensorId) {
-    // TODO: Task 5
-    return null;
+    return alertRepository.findFirstBySensor_IdOrderByTimestampDesc(sensorId)
+            .map(alert -> new AlertDto(
+                    alert.getSensor().getId(),
+                    alert.getMessage(),
+                    alert.getTimestamp()
+            ))
+            .orElseThrow(() -> new EntityNotFoundException("Alert not found for sensor id: " + sensorId));
   }
 }
