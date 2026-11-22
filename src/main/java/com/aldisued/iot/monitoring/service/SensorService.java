@@ -3,6 +3,7 @@ package com.aldisued.iot.monitoring.service;
 import com.aldisued.iot.monitoring.dto.SensorDto;
 import com.aldisued.iot.monitoring.entity.Sensor;
 import com.aldisued.iot.monitoring.repository.SensorRepository;
+import com.aldisued.iot.monitoring.service.exception.SensorAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +16,10 @@ public class SensorService {
   }
 
   public Sensor saveSensor(SensorDto sensor) {
+    if (sensorRepository.existsByName(sensor.name())) {
+      throw new SensorAlreadyExistsException(sensor.name());
+    }
+
     return sensorRepository.save(new Sensor(
         sensor.name(),
         sensor.type()
