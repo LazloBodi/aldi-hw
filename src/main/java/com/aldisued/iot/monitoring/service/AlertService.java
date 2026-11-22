@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AlertService {
+  public static final String ALERTS_TOPIC_NAME = "alerts";
 
   private final AlertRepository alertRepository;
   private final SensorRepository sensorRepository;
@@ -24,8 +25,13 @@ public class AlertService {
   }
 
   public Alert saveAlert(AlertDto alertDto) {
-    // TODO: Task 6
-    return null;
+    var sensor = sensorRepository.findById(alertDto.sensorId())
+        .orElseThrow(() -> new EntityNotFoundException(
+            "Sensor was not found with id: " + alertDto.sensorId()));
+    var alert = new Alert(alertDto.message(), alertDto.timestamp(), sensor);
+    var savedAlert = alertRepository.save(alert);
+    kafkaTemplate.send(ALERTS_TOPIC_NAME, alertDto);
+    return savedAlert;
   }
 
   public AlertDto findLastAlertBySensorId(UUID sensorId) {
