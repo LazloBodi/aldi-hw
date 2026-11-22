@@ -1,5 +1,6 @@
 package com.aldisued.iot.monitoring.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,10 +30,10 @@ public class Sensor {
   @Enumerated(EnumType.STRING)
   private SensorType type;
 
-  @OneToMany(mappedBy = "sensor")
+  @OneToMany(mappedBy = "sensor", cascade = CascadeType.REMOVE)
   private List<Alert> alerts = new ArrayList<>();
 
-  @OneToMany(mappedBy = "sensor")
+  @OneToMany(mappedBy = "sensor", cascade = CascadeType.REMOVE)
   private List<SensorReading> sensorReadings = new ArrayList<>();
 
   public Sensor() {}

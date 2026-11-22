@@ -46,7 +46,7 @@ public class Task6Tests extends IntegrationTestBase {
   public void verifySensorReadingProperties() {
     var alertDto = testAlertDto();
 
-    Alert alert = alertService.saveAlert(alertDto);
+    Alert alert = alertService.saveAndPublishAlert(alertDto);
 
     Assertions.assertEquals(alertDto.message(), alert.getMessage());
     Assertions.assertEquals(alertDto.timestamp(), alert.getTimestamp());
@@ -57,7 +57,7 @@ public class Task6Tests extends IntegrationTestBase {
   public void verifySensorEntity() {
     var alertDto = testAlertDto();
 
-    Alert alert = alertService.saveAlert(alertDto);
+    Alert alert = alertService.saveAndPublishAlert(alertDto);
 
     Assertions.assertEquals(SENSOR_ID, alert.getSensor().getId());
   }
@@ -67,7 +67,7 @@ public class Task6Tests extends IntegrationTestBase {
   public void verifyKafkaMessage() {
     var alertDto = testAlertDto();
 
-    alertService.saveAlert(alertDto);
+    alertService.saveAndPublishAlert(alertDto);
 
     Mockito.verify(
         kafkaTemplate,
