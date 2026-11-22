@@ -19,8 +19,14 @@ public class SensorReadingService {
   }
 
   public SensorReading saveSensorReading(SensorReadingDto sensorReadingDto) {
-    //TODO: Task 3
-    return null;
+    var sensor = sensorRepository.findById(sensorReadingDto.sensorId())
+        .orElseThrow();
+    var sensorReading = new SensorReading(
+        sensorReadingDto.value(),
+        sensorReadingDto.timestamp(),
+        sensor
+    );
+    return sensorReadingRepository.save(sensorReading);
   }
 
 }
